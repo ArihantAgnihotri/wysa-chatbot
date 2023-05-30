@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Snackbar,
+  Modal,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -7,7 +14,10 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     // Check if user is already logged in
     const storedUsername = localStorage.getItem("username");
@@ -26,7 +36,7 @@ const LoginPage = () => {
       setIsLoggedIn(true);
       localStorage.setItem("username", foundUser.username);
     } else {
-      alert("Invalid credentials");
+      setShowErrorAlert(true);
     }
   };
 
@@ -36,14 +46,19 @@ const LoginPage = () => {
       (user) => user.username === username
     );
     if (isUsernameTaken) {
-      alert("Username already taken");
+      setShowErrorAlert(true);
     } else {
       const newUser = { username, password };
       setRegisteredUsers([...registeredUsers, newUser]);
       setUsername("");
       setPassword("");
-      alert("User registered successfully");
+      setShowSuccessAlert(true);
     }
+  };
+
+  const handleCloseAlert = () => {
+    setShowSuccessAlert(false);
+    setShowErrorAlert(false);
   };
 
   if (isLoggedIn) {
@@ -51,30 +66,66 @@ const LoginPage = () => {
   }
 
   return (
-    <div>
-      <h1>Login Page</h1>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
+      sx={{
+        background:
+          "linear-gradient(239.26deg, rgb(221, 238, 237) 63.17%, rgb(253, 241, 224) 94.92%)",
+      }}
+    >
+      <Typography variant="h3" sx={{ color: "gray", paddingBottom: "20px" }}>
+        Login
+      </Typography>
       <TextField
         label="Username"
         variant="outlined"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        margin="normal"
       />
-      <br />
       <TextField
         label="Password"
         variant="outlined"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        margin="normal"
       />
-      <br />
-      <Button variant="contained" color="primary" onClick={handleLogin}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleLogin}
+        size="large"
+        style={{ margin: "16px 0" }}
+      >
         Login
       </Button>
-      <Button variant="contained" color="primary" onClick={handleRegister}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleRegister}
+        size="large"
+      >
         Register
       </Button>
-    </div>
+
+      <Snackbar
+        open={showSuccessAlert}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+        message="User registered successfully"
+      />
+      <Snackbar
+        open={showErrorAlert}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+        message="Invalid credentials, Kindly Register first."
+      />
+    </Box>
   );
 };
 

@@ -4,7 +4,6 @@ import LoginPage from "./LoginPage";
 const Home = () => {
   return (
     <div>
-      Home
       <LoginPage />
     </div>
   );
