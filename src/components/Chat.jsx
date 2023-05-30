@@ -193,6 +193,7 @@ const Chat = () => {
           bottom: "10px", // Position the bar at the bottom
           left: "20px",
           right: "20px",
+          border: "1px solid rgba(0,0,0,0.1)",
           background: "rgba(255,255,255,0.1)",
           borderRadius: "40px",
         }}
@@ -213,7 +214,11 @@ const Chat = () => {
         sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         <ModalContent>
-          <Typography variant="h5" fontWeight="bold">
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            sx={{ color: "rgb(50,50,50)" }}
+          >
             Settings
           </Typography>
           <Button
@@ -247,7 +252,11 @@ const Chat = () => {
         sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         <ModalContent>
-          <Typography variant="h5" fontWeight="bold">
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            sx={{ color: "rgb(50,50,50)" }}
+          >
             Select Color
           </Typography>
           <Button
@@ -325,7 +334,7 @@ const Chat = () => {
               })
             }
           >
-            Countryside
+            Meadows
           </Button>
         </ModalContent>
       </Modal>
