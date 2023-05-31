@@ -175,7 +175,7 @@ const Chat = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
+        height: "105vh",
         display: "flex",
         flexDirection: "column",
         background: theme.backgroundColor,
@@ -225,7 +225,7 @@ const Chat = () => {
           alignItems: "center",
           padding: "10px",
           // position: "fixed",
-          bottom: "10px", // Position the bar at the bottom
+          bottom: "30px",
           left: "20px",
           right: "20px",
           border: "1px solid rgba(0,0,0,0.1)",
