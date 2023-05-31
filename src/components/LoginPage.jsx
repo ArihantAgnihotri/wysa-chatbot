@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Box,
-  Snackbar,
-  Modal,
-} from "@mui/material";
+import { TextField, Button, Typography, Box, Snackbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
+  //Browser Local Storage Variables
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //Login check
   const [registeredUsers, setRegisteredUsers] = useState([]);
+  //Alerts
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
+  // New state for profile picture
+  const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Check if user is already logged in
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
-      setIsLoggedIn(true);
       setUsername(storedUsername);
     }
   }, []);
@@ -33,8 +29,8 @@ const LoginPage = () => {
       (user) => user.username === username && user.password === password
     );
     if (foundUser) {
-      setIsLoggedIn(true);
       localStorage.setItem("username", foundUser.username);
+      return navigate(`/chat/${username}`);
     } else {
       setShowErrorAlert(true);
     }
@@ -48,10 +44,12 @@ const LoginPage = () => {
     if (isUsernameTaken) {
       setShowErrorAlert(true);
     } else {
-      const newUser = { username, password };
+      const newUser = { username, password, profilePicture };
+      localStorage.setItem("username", username);
       setRegisteredUsers([...registeredUsers, newUser]);
       setUsername("");
       setPassword("");
+      setProfilePicture(null);
       setShowSuccessAlert(true);
     }
   };
@@ -61,9 +59,10 @@ const LoginPage = () => {
     setShowErrorAlert(false);
   };
 
-  if (isLoggedIn) {
-    return navigate(`/chat/${username}`);
-  }
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    setProfilePicture(file);
+  };
 
   return (
     <Box
@@ -95,6 +94,39 @@ const LoginPage = () => {
         onChange={(e) => setPassword(e.target.value)}
         margin="normal"
       />
+      <label htmlFor="profile-picture-upload" style={{ marginTop: "16px" }}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography variant="h6" component="span">
+            Upload Profile Picture
+          </Typography>
+          <Button
+            variant="outlined"
+            component="span"
+            color="primary"
+            size="large"
+            style={{ marginTop: "8px" }}
+          >
+            Browse
+          </Button>
+          {profilePicture && (
+            <Typography variant="body2" style={{ marginTop: "8px" }}>
+              {profilePicture.name}
+            </Typography>
+          )}
+        </Box>
+      </label>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleProfilePictureChange}
+        style={{ display: "none" }}
+        id="profile-picture-upload"
+      />
       <Button
         variant="contained"
         color="primary"
@@ -112,7 +144,6 @@ const LoginPage = () => {
       >
         Register
       </Button>
-
       <Snackbar
         open={showSuccessAlert}
         autoHideDuration={3000}
